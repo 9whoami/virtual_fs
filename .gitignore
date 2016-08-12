@@ -11,7 +11,7 @@ __pycache__/
 .directory
 extra/
 test.py/
-
+river_sity/settings/local.py
 
 # C extensions
 *.so
