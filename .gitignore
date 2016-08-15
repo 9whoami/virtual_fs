@@ -12,6 +12,7 @@ __pycache__/
 extra/
 test.py/
 river_sity/settings/local.py
+vfs/virtual_driver/root/
 
 # C extensions
 *.so

@@ -7,12 +7,55 @@
     <script src="{% static 'js/jquery-3.1.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
+    <script src="{% static 'js/ajax_dir_update.js' %}"></script>
+
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
     <title>Hello</title>
 </head>
 <body>
-    <a class="btn btn-success">Welcome!</a>
+{#    {% for key, value in model.items %}#}
+{#        <p>{{ key }}</p>#}
+{#        -------#}
+{#        {% for folder in value.folders %}#}
+{#            <p class="view" data-v="root">{{ folder }}</p>#}
+{#        {% endfor %}#}
+{#        --------#}
+{#        {% for file in value.files %}#}
+{#            <p>{{ file }}</p>#}
+{#        {% endfor %}#}
+{#        --------#}
+{#        <p>Файдов: {{ value.files|length }}</p>#}
+{#        <p>Папок: {{ value.folders|length }}</p>#}
+{#        <p>Размер: {{ value.size|filesizeformat }}</p>#}
+{#    {% endfor %}#}
+
+<ul class="nav nav-list">
+    {% for key, value in model.items %}
+
+        <li class="nav-header">Navigation panel</li>
+
+        <li class="active">
+            <a class="view" data-toggle="collapse" data-target="#{{ key }}" data-v="{{ key }}" href="#">
+                {{ key }}
+            </a>
+        </li>
+
+        <ul class="nav nav-list collapse in">
+            {% for folder in value.folders %}
+
+                <li id="{{ key }}/{{ folder }}">
+                    <button class="view" data-v="{{ key }}/{{ folder }}">
+                        {{ folder }}
+                    </button>
+                </li>
+
+            {% endfor %}
+        </ul>
+
+    {% endfor %}
+</ul>
+
 </body>
 </html>
