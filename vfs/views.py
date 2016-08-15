@@ -22,6 +22,6 @@ def ajax_get_dir(request):
         listing = models.DirectoryListing()
         data = listing.get_path(request.GET['path'])
         data['key'] = list(data.keys())[0]
-        data['self'] = request.GET['self']
+        data['self'] = request.GET['path']
         data = simplejson.dumps(data, ensure_ascii=False)
         return HttpResponse(data, content_type='application/json')

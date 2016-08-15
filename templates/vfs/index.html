@@ -7,6 +7,7 @@
     <script src="{% static 'js/jquery-3.1.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
+
     <script src="{% static 'js/ajax_dir_update.js' %}"></script>
 
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -34,25 +35,27 @@
 <ul class="nav nav-list">
     {% for key, value in model.items %}
 
-        <li class="nav-header">Navigation panel</li>
-
-        <li class="active">
-            <a class="view" data-toggle="collapse" data-target="#{{ key }}" data-v="{{ key }}" href="#">
+        <li id="{{ key }}">
+            <a class="view" data-v="{{ key }}" href="#" data-toggle="collapse" data-target="#col{{ key }}">
                 {{ key }}
             </a>
+
+            <ul id="col{{ key }}" class="collapse in">
+
+                {% for folder in value.folders %}
+
+                    <li id="{{ key }}/{{ folder }}">
+
+                        <a class="view folder" data-v="{{ key }}/{{ folder }}" data-toggle="collapse" data-target="#col{{ key }}/{{ folder }}">
+                            {{ folder }}
+                        </a>
+
+                    </li>
+
+                {% endfor %}
+
+            </ul>
         </li>
-
-        <ul class="nav nav-list collapse in">
-            {% for folder in value.folders %}
-
-                <li id="{{ key }}/{{ folder }}">
-                    <button class="view" data-v="{{ key }}/{{ folder }}">
-                        {{ folder }}
-                    </button>
-                </li>
-
-            {% endfor %}
-        </ul>
 
     {% endfor %}
 </ul>
