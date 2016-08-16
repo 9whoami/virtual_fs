@@ -42,13 +42,12 @@ class DirectoryListing:
         basename = os.path.basename(filepath)
         fullpath = os.path.join(os.getcwd(), self.virtual_dir, filepath)
         listing = {basename: {}}
-
         listing[basename]['size'] = os.path.getsize(fullpath)
         listing[basename]['is_folder'] = os.path.isdir(fullpath)
 
+
         with open(fullpath, 'r') as f:
             listing[basename]['source'] = f.read()
-
         return listing
 
     def create_path(self, path):
@@ -85,3 +84,22 @@ class DirectoryListing:
         else:
             return True
 
+    def save_to_file(self, path, new_name, source, **kw):
+        path = ''.join(path)
+        new_name = ''.join(new_name)
+        source = ''.join(source)
+
+        old_path = path.split(': /')[1]
+        path = os.sep.join(old_path.split(os.sep)[:-1])
+        new_path = os.path.join(path, new_name)
+
+        result = {'path': new_path}
+
+        old_path = os.path.join(os.getcwd(), self.virtual_dir, old_path)
+        new_path = os.path.join(os.getcwd(), self.virtual_dir, new_path)
+
+        os.remove(old_path)
+        with open(new_path, 'w') as f:
+            f.write(source)
+
+        return result

@@ -52,3 +52,11 @@ def ajax_remove(request):
         data = {'result': listing.remove_path(request.GET['path'])}
         data = simplejson.dumps(data, ensure_ascii=False)
         return HttpResponse(data, content_type='application/json')
+
+
+def ajax_save_to_file(request):
+    if request.method in 'GET':
+        listing = models.DirectoryListing()
+        data = listing.save_to_file(**request.GET)
+        data = simplejson.dumps(data, ensure_ascii=False)
+        return HttpResponse(data, content_type='application/json')

@@ -9,6 +9,40 @@ jQuery(document).ready(function ($) {
     $('.create_folder').click(createPath);
     $('.create_file').click(createFile);
     $('.remove').click(removePath);
+    $('.save_file').click(saveToFile);
+
+    function saveToFile(){
+        var file_name = document.getElementById('filename');
+        file_name = file_name.value;
+
+        var full_path = document.getElementById('fullpath');
+        full_path = full_path.innerHTML;
+
+        var source = $("#src").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/save_to_file",
+            data: {
+                'path': full_path,
+                'new_name': file_name,
+                'source': source
+            },
+            dataType: "json",
+            cache: false,
+            success: function (data) {
+                full_path = data['path'];
+
+                var li = document.getElementById('update');
+                li.setAttribute('class', '');
+
+                var a = li.firstElementChild;
+                a.setAttribute('data-v', full_path);
+                a.click();
+            }
+        })
+
+    }
 
     function formatSize(length){
         var i = 0, type = ['б','Кб','Мб','Гб','Тб','Пб'];
@@ -163,7 +197,7 @@ jQuery(document).ready(function ($) {
                             div.setAttribute('class', 'thumbnail');
 
                             var img = document.createElement('img');
-                            img.setAttribute('src', '');
+                            img.setAttribute('src', '/static/img/folder.png');
                             img.setAttribute('class', 'view');
                             img.setAttribute('data-v', full_path);
                             img.setAttribute('alt', base_name);
@@ -189,7 +223,7 @@ jQuery(document).ready(function ($) {
                             div.setAttribute('class', 'thumbnail');
 
                             var img = document.createElement('img');
-                            img.setAttribute('src', '');
+                            img.setAttribute('src', '/static/img/file.png');
                             img.setAttribute('class', 'view');
                             img.setAttribute('data-v', full_path);
                             img.setAttribute('alt', base_name);
@@ -206,6 +240,14 @@ jQuery(document).ready(function ($) {
                         }
                     }
                 } else {
+                    var cnt_files = document.getElementById('files');
+                    var cnt_folders = document.getElementById('folders');
+                    var total_size = document.getElementById('size');
+
+                    cnt_files.innerHTML = 'count files: -';
+                    cnt_folders.innerHTML = 'count folders: -';
+                    total_size.innerHTML = 'total size: ' + formatSize(data[key]['size']);
+
                     var l = ['create_file', 'create_folder', 'remove'];
                     for (var id in l){
                         var li = document.getElementById(l[id]);
@@ -214,7 +256,10 @@ jQuery(document).ready(function ($) {
                     listing.style.display = 'none';
                     source.style.display = 'inherit';
                     var pre = document.getElementById('src');
-                    pre.innerHTML = data[key]['source'];
+                    pre.value = data[key]['source'];
+
+                    var filename = document.getElementById('filename');
+                    filename.value = key;
                 }
 
                 $('.view').click(changeView);

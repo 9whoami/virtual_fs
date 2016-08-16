@@ -79,11 +79,32 @@
         </div>
 
         <div class="span12" id="source" style="display: none">
-            <pre id="src"></pre>
+            <div class="span4">
+                <div class="navbar-search pull-left">
+                  <input id="filename" type="text" class="search-query" placeholder="Search">
+                </div>
+                <a id="save_file" href="#" class="save_file btn btn-small btn-primary">Save</a>
+            </div>
+
+            <div class="span12">
+                <textarea id="src"></textarea>
+            </div>
         </div>
     </div>
 
 </div>
+
+<script>
+    function h(e) {
+      $(e).css({'height':'auto','overflow-y':'hidden'}).height(e.scrollHeight);
+    }
+    $('textarea').each(function () {
+      h(this);
+    }).on('input', function () {
+      h(this);
+    });
+    h('textarea');
+</script>
 
 </body>
 </html>

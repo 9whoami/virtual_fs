@@ -17,3 +17,14 @@
 #empty_message{
     margin-top: 5px;
 }
+
+#src {
+    margin-top: 10px;
+    width: 90%;
+    height: 100%;
+}
+
+#save_file {
+    margin-top: 7px;
+    margin-left: 10px;
+}
