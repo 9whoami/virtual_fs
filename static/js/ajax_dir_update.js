@@ -13,6 +13,7 @@ jQuery(document).ready(function ($) {
             dataType: "json",
             cache: false,
             success: function(data){
+                var counter = 0
                 var ul = document.createElement('ul');
                 ul.setAttribute('class', "collapse in");
                 ul.setAttribute('id', 'col'+data['self']);
@@ -23,7 +24,7 @@ jQuery(document).ready(function ($) {
                     if (document.getElementById(data[key]['path'] + '/' + data[key]['folders'][folder])){
                         break
                     }
-
+                    counter ++;
                     var button = document.createElement('a');
                     button.className = "view folder";
                     button.setAttribute('data-v', data[key]['path'] + '/' + data[key]['folders'][folder]);
@@ -42,7 +43,7 @@ jQuery(document).ready(function ($) {
                     if (document.getElementById(data[key]['path'] + '/' + data[key]['files'][file])){
                         break
                     }
-
+                    counter ++;
                     var button = document.createElement('a');
                     button.className = "file";
                     button.setAttribute('data-v', data[key]['path'] + '/' + data[key]['files'][file]);
@@ -53,8 +54,10 @@ jQuery(document).ready(function ($) {
                     li.appendChild(button);
                     ul.appendChild(li);
                 }
-
-                document.getElementById(data['self']).appendChild(ul);
+                if (counter){
+                    document.getElementById(data['self']).appendChild(ul);
+                    // $(".collapse").collapse({toggle:true})
+                }
 
 
             }
