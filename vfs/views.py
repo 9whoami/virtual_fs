@@ -1,3 +1,5 @@
+import os
+
 import simplejson as simplejson
 from django.shortcuts import render
 from django.http.response import HttpResponse
@@ -22,6 +24,23 @@ def ajax_get_dir(request):
         listing = models.DirectoryListing()
         data = listing.get_path(request.GET['path'])
         data['key'] = list(data.keys())[0]
-        data['self'] = request.GET['path']
+        data['cur_path'] = request.GET['path']
+        data['prev_path'] = os.sep.join(request.GET['path'].split(os.sep)[0:-1])
+        data = simplejson.dumps(data, ensure_ascii=False)
+        return HttpResponse(data, content_type='application/json')
+
+
+def ajax_create_path(request):
+    if request.method in 'GET':
+        listing = models.DirectoryListing()
+        data = {'result': listing.create_path(request.GET['path'])}
+        data = simplejson.dumps(data, ensure_ascii=False)
+        return HttpResponse(data, content_type='application/json')
+
+
+def ajax_create_file(request):
+    if request.method in 'GET':
+        listing = models.DirectoryListing()
+        data = {'result': listing.create_file(request.GET['path'])}
         data = simplejson.dumps(data, ensure_ascii=False)
         return HttpResponse(data, content_type='application/json')

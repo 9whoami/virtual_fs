@@ -49,3 +49,21 @@ class DirectoryListing:
             listing[basename]['source'] = f.read()
 
         return listing
+
+    def create_path(self, path):
+        try:
+            os.mkdir(os.path.join(os.getcwd(), self.virtual_dir, path))
+        except Exception:
+            return False
+        else:
+            return True
+
+    def create_file(self, path):
+        try:
+            full_path = os.path.join(os.getcwd(), self.virtual_dir, path)
+            with open(full_path, 'w'):
+                pass
+        except Exception:
+            return False
+        else:
+            return True

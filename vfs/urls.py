@@ -9,4 +9,6 @@ app_name = 'vfs'
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'get_path\S*', views.ajax_get_dir, name='get_path'),
+    url(r'create_path\S*', views.ajax_create_path, name='create_path'),
+    url(r'create_file\S*', views.ajax_create_file, name='create_file'),
 ]
