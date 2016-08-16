@@ -9,6 +9,7 @@ jQuery(document).ready(function ($) {
     $('.create_folder').click(createPath);
     $('.create_file').click(createFile);
     $('.remove').click(removePath);
+    $('.remove_file').click(removeFile);
     $('.save_file').click(saveToFile);
 
     function saveToFile(){
@@ -54,24 +55,35 @@ jQuery(document).ready(function ($) {
     }
 
     function removePath(){
-        var path_name = prompt('File or dir name', '');
-        if (path_name.length == 0){
-            alert('Вы не указали имя файла')
-        } else {
-            $.ajax({
-                type: "GET",
-                url: "/remove",
-                data: {
-                    'path': $(this).attr('data-v') +'/'+ path_name
-                },
-                dataType: "json",
-                cache: false,
-                success: function (data) {
-                    var update = document.getElementById('update');
-                    update.firstElementChild.click();
-                }
-            })
-        }
+        $.ajax({
+            type: "GET",
+            url: "/remove",
+            data: {
+                'path': $(this).attr('data-v')
+            },
+            dataType: "json",
+            cache: false,
+            success: function (data) {
+                var update = document.getElementById('update');
+                update.firstElementChild.click();
+            }
+        })
+    }
+
+    function removeFile(){
+        $.ajax({
+            type: "GET",
+            url: "/remove",
+            data: {
+                'path': $(this).attr('data-v')
+            },
+            dataType: "json",
+            cache: false,
+            success: function (data) {
+                var update = document.getElementById('back');
+                update.firstElementChild.click();
+            }
+        })
     }
 
     function createFile(){
@@ -158,6 +170,9 @@ jQuery(document).ready(function ($) {
                 path.innerHTML = 'path: /' + full_path;
 
                 if (data[key]['is_folder']) {
+                    var li = document.getElementById('remove');
+                    li.setAttribute('class', 'disabled');
+
                     var cnt_files = document.getElementById('files');
                     var cnt_folders = document.getElementById('folders');
                     var total_size = document.getElementById('size');
@@ -168,7 +183,7 @@ jQuery(document).ready(function ($) {
 
                     source.style.display = 'none';
                     listing.style.display = 'inherit';
-                    var l = ['create_file', 'create_folder', 'remove'];
+                    var l = ['create_file', 'create_folder'];
                     for (var id in l){
                         var li = document.getElementById(l[id]);
                         li.setAttribute('class', '');
@@ -202,12 +217,19 @@ jQuery(document).ready(function ($) {
                             img.setAttribute('data-v', full_path);
                             img.setAttribute('alt', base_name);
 
+                            var img_rm = document.createElement('img');
+                            img_rm.setAttribute('src', '/static/img/trash.png');
+                            img_rm.setAttribute('class', 'remove');
+                            img_rm.setAttribute('data-v', full_path);
+                            img_rm.innerHTML = 'rm';
+
                             var img_div = document.createElement('div');
                             img_div.setAttribute('class', 'badge badge-success');
                             img_div.innerHTML = base_name;
 
                             div.appendChild(img);
                             div.appendChild(img_div);
+                            div.appendChild(img_rm);
                             li.appendChild(div);
                             container.appendChild(li);
                         }
@@ -228,12 +250,19 @@ jQuery(document).ready(function ($) {
                             img.setAttribute('data-v', full_path);
                             img.setAttribute('alt', base_name);
 
+                            var img_rm = document.createElement('img');
+                            img_rm.setAttribute('src', '/static/img/trash.png');
+                            img_rm.setAttribute('class', 'remove');
+                            img_rm.setAttribute('data-v', full_path);
+                            img_rm.innerHTML = 'rm';
+
                             var img_div = document.createElement('div');
                             img_div.setAttribute('class', 'badge badge-success');
                             img_div.innerHTML = base_name;
 
                             div.appendChild(img);
                             div.appendChild(img_div);
+                            div.appendChild(img_rm);
                             li.appendChild(div);
                             container.appendChild(li);
 
@@ -248,7 +277,12 @@ jQuery(document).ready(function ($) {
                     cnt_folders.innerHTML = 'count folders: -';
                     total_size.innerHTML = 'total size: ' + formatSize(data[key]['size']);
 
-                    var l = ['create_file', 'create_folder', 'remove'];
+                    var li = document.getElementById('remove');
+                    li.setAttribute('class', '');
+                    var a = li.firstElementChild;
+                    a.setAttribute('data-v', full_path);
+
+                    var l = ['create_file', 'create_folder'];
                     for (var id in l){
                         var li = document.getElementById(l[id]);
                         li.setAttribute('class', 'disabled');
@@ -263,6 +297,7 @@ jQuery(document).ready(function ($) {
                 }
 
                 $('.view').click(changeView);
+                $('.remove').click(removePath);
 
             }
        });

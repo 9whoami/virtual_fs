@@ -22,23 +22,23 @@
     <div class="span12" id="menu">
         <ul class="nav nav-tabs">
             <li class="disabled" id="back">
-                <a href="#" class="back_view">back</a>
+                <a href="#" class="back_view">Back</a>
             </li>
 
             <li class="disabled" id="create_file">
-                <a href="#" class="create_file">create_file</a>
+                <a href="#" class="create_file">Сreate file</a>
             </li>
 
             <li class="disabled" id="create_folder">
-                <a href="#" class="create_folder">create_folder</a>
+                <a href="#" class="create_folder">Сreate folder</a>
             </li>
 
             <li class="disabled" id="remove">
-                <a href="#" class="remove">remove</a>
+                <a href="#" class="remove_file">Remove</a>
             </li>
 
             <li class="disabled" id="update">
-                <a href="#" class="update_view">update</a>
+                <a href="#" class="update_view">Update</a>
             </li>
         </ul>
     </div>
@@ -68,9 +68,9 @@
                 {% for key, value in model.items %}
                     <li class="span2 list">
                         <div class="thumbnail">
-                            <img class="view" src="{% static "img/folder.png" %}" data-v="{{ value.path }}"
-                                 alt="{{ key }}">
+                            <img class="view" src="{% static "img/folder.png" %}" data-v="{{ value.path }}" alt="{{ key }}">
                             <div class="badge badge-success">{{ key }}</div>
+                            <img class="remove" data-v="{{ key }}" src="{% static "img/trash.png" %}">
                         </div>
                     </li>
                 {% endfor %}

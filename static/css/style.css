@@ -28,3 +28,16 @@
     margin-top: 7px;
     margin-left: 10px;
 }
+
+.view {
+    cursor: pointer;
+}
+
+.remove {
+    padding-left: 80%;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border: 1px #0e90d2;
+    background: transparent;
+    cursor: pointer;
+}
