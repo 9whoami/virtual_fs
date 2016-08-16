@@ -3,9 +3,21 @@
  */
 jQuery(document).ready(function ($) {
     $('.view').click(changeView);
+    $('.back_view').click(changeView);
+    $('.update_view').click(changeView);
+
     $('.create_folder').click(createPath);
     $('.create_file').click(createFile);
-    $('.removePath').click(removePath);
+    $('.remove').click(removePath);
+
+    function formatSize(length){
+        var i = 0, type = ['б','Кб','Мб','Гб','Тб','Пб'];
+        while((length / 1000 | 0) && i < type.length - 1) {
+            length /= 1024;
+            i++;
+        }
+        return length.toFixed(2) + ' ' + type[i];
+    }
 
     function removePath(){
         var path_name = prompt('File or dir name', '');
@@ -22,7 +34,7 @@ jQuery(document).ready(function ($) {
                 cache: false,
                 success: function (data) {
                     var update = document.getElementById('update');
-                    update.click();
+                    update.firstElementChild.click();
                 }
             })
         }
@@ -43,7 +55,7 @@ jQuery(document).ready(function ($) {
                 cache: false,
                 success: function (data) {
                     var update = document.getElementById('update');
-                    update.click();
+                    update.firstElementChild.click();
                 }
             })
         }
@@ -64,7 +76,7 @@ jQuery(document).ready(function ($) {
                 cache: false,
                 success: function (data) {
                     var update = document.getElementById('update');
-                    update.click();
+                    update.firstElementChild.click();
                 }
             })
         }
@@ -80,132 +92,132 @@ jQuery(document).ready(function ($) {
             dataType: "json",
             cache: false,
             success: function(data){
-                elements = document.getElementsByClassName('view');
-                count = elements.length;
+
+                var elements = document.getElementsByClassName('list');
+                var count = elements.length;
                 for (var i=0; i < count; i++) {
                     elements[0].remove();
                 }
 
+                var container = document.getElementById('container');
+                var source = document.getElementById('source');
+                var listing = document.getElementById('listing');
 
-                elements = document.getElementsByClassName('create_folder');
-                count = elements.length;
-                for (var i=0; i < count; i++) {
-                    elements[0].remove();
-                }
-
-                elements = document.getElementsByClassName('create_file');
-                count = elements.length;
-                for (var i=0; i < count; i++) {
-                    elements[0].remove();
-                }
-
-                elements = document.getElementsByClassName('removePath');
-                count = elements.length;
-                for (var i=0; i < count; i++) {
-                    elements[0].remove();
-                }
-
-
-                var p = document.getElementById('emptyfolder');
-                if (p){
-                    p.remove();
-                }
-
-                var div = document.getElementById('container');
                 var key = data['key'];
 
-                var a = document.createElement('a');
-                var full_path = data['cur_path'];
-                a.setAttribute('class', 'view');
-                a.setAttribute('id', 'update');
-                a.setAttribute('href', '#update');
-                a.setAttribute('data-v', full_path);
-                a.innerHTML = 'UPDATE';
-                div.appendChild(a);
-
-                a = document.createElement('a');
-                full_path = data['prev_path'];
+                var full_path = data['prev_path'];
                 if (full_path.length) {
-                    a.setAttribute('class', 'view');
-                    a.setAttribute('href', '#back');
+                    li = document.getElementById('back');
+                    li.setAttribute('class', '');
+                    var a = li.firstElementChild;
                     a.setAttribute('data-v', full_path);
-                    a.innerHTML = 'BACK';
-                    div.appendChild(a);
                 }
 
+                var li = document.getElementById('update');
+                full_path = data['cur_path'];
+
+                li.setAttribute('class', '');
+                var a = li.firstElementChild;
+                a.setAttribute('data-v', full_path);
+
+                var path = document.getElementById('fullpath');
+                path.innerHTML = 'path: /' + full_path;
+
                 if (data[key]['is_folder']) {
-                    a = document.createElement('a');
-                    a.setAttribute('class', 'removePath');
-                    a.setAttribute('href', '#remove_path');
-                    if (full_path.length == 0){
-                        a.setAttribute('data-v', 'root');
-                    } else {
-                        a.setAttribute('data-v', full_path);
-                    }
-                    a.innerHTML = 'removePath';
-                    div.appendChild(a);
+                    var cnt_files = document.getElementById('files');
+                    var cnt_folders = document.getElementById('folders');
+                    var total_size = document.getElementById('size');
 
-                    a = document.createElement('a');
-                    a.setAttribute('class', 'create_folder');
-                    a.setAttribute('href', '#create_folder');
-                    if (full_path.length == 0){
-                        a.setAttribute('data-v', 'root');
-                    } else {
-                        a.setAttribute('data-v', full_path);
-                    }
-                    a.innerHTML = 'CREATE_FOLDER';
-                    div.appendChild(a);
+                    cnt_files.innerHTML = 'count files: ' + data[key]['files'].length;
+                    cnt_folders.innerHTML = 'count folders: ' + data[key]['folders'].length;
+                    total_size.innerHTML = 'total size: ' + formatSize(data[key]['size']);
 
-                    a = document.createElement('a');
-                    a.setAttribute('class', 'create_file');
-                    a.setAttribute('href', '#create_file');
-                    if (full_path.length == 0){
-                        a.setAttribute('data-v', 'root');
-                    } else {
-                        a.setAttribute('data-v', full_path);
+                    source.style.display = 'none';
+                    listing.style.display = 'inherit';
+                    var l = ['create_file', 'create_folder', 'remove'];
+                    for (var id in l){
+                        var li = document.getElementById(l[id]);
+                        li.setAttribute('class', '');
+                        var a = li.firstElementChild;
+                        if (full_path.length == 0){
+                            a.setAttribute('data-v', 'root');
+                        } else {
+                            a.setAttribute('data-v', full_path);
+                        }
                     }
-                    a.innerHTML = 'CREATE_File';
-                    div.appendChild(a);
+
+                    var empty = document.getElementById('empty');
 
                     if (data[key]['folders'].length == 0 && data[key]['files'].length == 0) {
-                        p = document.createElement('h1');
-                        p.setAttribute('id', 'emptyfolder');
-                        p.innerHTML = 'Эта папка пуста';
-                        div.appendChild(p);
+                        empty.style.display = 'inherit';
                     } else {
+                        empty.style.display = 'none';
                         for (var folder in data[key]['folders']) {
                             full_path = data[key]['path'] + '/' + data[key]['folders'][folder];
-                            a = document.createElement('a');
-                            a.setAttribute('class', 'view');
-                            a.setAttribute('href', '#');
-                            a.setAttribute('data-v', full_path);
-                            a.innerHTML = data[key]['folders'][folder];
-                            div.appendChild(a);
+                            var base_name = data[key]['folders'][folder];
+
+                            var li = document.createElement('li');
+                            li.setAttribute('class', 'span2 list');
+
+                            var div = document.createElement('div');
+                            div.setAttribute('class', 'thumbnail');
+
+                            var img = document.createElement('img');
+                            img.setAttribute('src', '');
+                            img.setAttribute('class', 'view');
+                            img.setAttribute('data-v', full_path);
+                            img.setAttribute('alt', base_name);
+
+                            var img_div = document.createElement('div');
+                            img_div.setAttribute('class', 'badge badge-success');
+                            img_div.innerHTML = base_name;
+
+                            div.appendChild(img);
+                            div.appendChild(img_div);
+                            li.appendChild(div);
+                            container.appendChild(li);
                         }
 
                         for (var file in data[key]['files']) {
                             full_path = data[key]['path'] + '/' + data[key]['files'][file];
-                            a = document.createElement('a');
-                            a.setAttribute('class', 'view');
-                            a.setAttribute('href', '#');
-                            a.setAttribute('data-v', full_path);
-                            a.innerHTML = data[key]['files'][file];
-                            div.appendChild(a);
+                            var base_name = data[key]['files'][file];
+
+                            var li = document.createElement('li');
+                            li.setAttribute('class', 'span2 list');
+
+                            var div = document.createElement('div');
+                            div.setAttribute('class', 'thumbnail');
+
+                            var img = document.createElement('img');
+                            img.setAttribute('src', '');
+                            img.setAttribute('class', 'view');
+                            img.setAttribute('data-v', full_path);
+                            img.setAttribute('alt', base_name);
+
+                            var img_div = document.createElement('div');
+                            img_div.setAttribute('class', 'badge badge-success');
+                            img_div.innerHTML = base_name;
+
+                            div.appendChild(img);
+                            div.appendChild(img_div);
+                            li.appendChild(div);
+                            container.appendChild(li);
+
                         }
                     }
                 } else {
-                    var pre = document.createElement('pre');
-                    pre.setAttribute('id', 'emptyfolder');
-                    p = document.createElement('p');
-                    p.innerHTML = data[key]['source'];
-                    pre.appendChild(p);
-                    div.appendChild(pre);
+                    var l = ['create_file', 'create_folder', 'remove'];
+                    for (var id in l){
+                        var li = document.getElementById(l[id]);
+                        li.setAttribute('class', 'disabled');
+                    }
+                    listing.style.display = 'none';
+                    source.style.display = 'inherit';
+                    var pre = document.getElementById('src');
+                    pre.innerHTML = data[key]['source'];
                 }
 
                 $('.view').click(changeView);
-                $('.create_folder').click(createPath);
-                $('.create_file').click(createFile);
-                $('.removePath').click(removePath);
 
             }
        });

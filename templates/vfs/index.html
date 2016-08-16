@@ -13,15 +13,76 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
-    <title>Hello</title>
+    <title>Virtual File Manager</title>
 </head>
 <body>
 
-<div id="container">
-{% for key, value in model.items %}
-    <a href="#" class="view" data-v="{{ value.path }}">{{ key }}</a>
-    <a href="#" class="view" data-v="{{ value.path }}">{{ key }}</a>
-{% endfor %}
+<div class="row container">
+
+    <div class="span12" id="menu">
+        <ul class="nav nav-tabs">
+            <li class="disabled" id="back">
+                <a href="#" class="back_view">back</a>
+            </li>
+
+            <li class="disabled" id="create_file">
+                <a href="#" class="create_file">create_file</a>
+            </li>
+
+            <li class="disabled" id="create_folder">
+                <a href="#" class="create_folder">create_folder</a>
+            </li>
+
+            <li class="disabled" id="remove">
+                <a href="#" class="remove">remove</a>
+            </li>
+
+            <li class="disabled" id="update">
+                <a href="#" class="update_view">update</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="span12 offset1" id="info">
+        <div class="span3 badge badge-warning" id="files">
+            count files: {{ model.root.files|length }}
+        </div>
+        <div class="span3 badge badge-success" id="folders">
+            count folders: {{ model.root.folders|length }}
+        </div>
+        <div class="span3 badge badge-info" id="size">
+            total size: {{ model.root.size|filesizeformat }}
+        </div>
+    </div>
+    <div class="span12 badge" id="fullpath">path: /</div>
+
+    <div class="span12">
+        <div class="span12" id="listing" style="display: inherit">
+
+            <div id="empty" class="badge badge-warning" style="display: none">
+                <p id="empty_message" class="offset5">Empty folder</p>
+            </div>
+
+            <ul id="container" class="thumbnails">
+
+                {% for key, value in model.items %}
+                    <li class="span2 list">
+                        <div class="thumbnail">
+                            <img class="view" src="{% static "img/folder.png" %}" data-v="{{ value.path }}"
+                                 alt="{{ key }}">
+                            <div class="badge badge-success">{{ key }}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div class="span12" id="source" style="display: none">
+            <pre id="src"></pre>
+        </div>
+    </div>
+
 </div>
 
 </body>

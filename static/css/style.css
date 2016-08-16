@@ -1,0 +1,19 @@
+.badge {
+    margin-top: 5px;
+}
+
+#container {
+    margin-top: 10px;
+}
+
+#source {
+    margin-top: 10px;
+}
+
+#empty {
+    margin-top: 10px;
+}
+
+#empty_message{
+    margin-top: 5px;
+}
