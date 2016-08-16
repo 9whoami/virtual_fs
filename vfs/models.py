@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 import os
 import itertools
+import shutil
 
 
 class DirectoryListing:
@@ -67,3 +68,20 @@ class DirectoryListing:
             return False
         else:
             return True
+
+    def remove_path(self, path):
+        full_path = os.path.join(os.getcwd(), self.virtual_dir, path)
+        try:
+            os.remove(full_path)
+        except IsADirectoryError:
+            try:
+                shutil.rmtree(full_path)
+            except Exception:
+                return False
+            else:
+                return True
+        except Exception:
+            return False
+        else:
+            return True
+

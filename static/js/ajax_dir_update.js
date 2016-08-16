@@ -5,6 +5,28 @@ jQuery(document).ready(function ($) {
     $('.view').click(changeView);
     $('.create_folder').click(createPath);
     $('.create_file').click(createFile);
+    $('.removePath').click(removePath);
+
+    function removePath(){
+        var path_name = prompt('File or dir name', '');
+        if (path_name.length == 0){
+            alert('Вы не указали имя файла')
+        } else {
+            $.ajax({
+                type: "GET",
+                url: "/remove",
+                data: {
+                    'path': $(this).attr('data-v') +'/'+ path_name
+                },
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    var update = document.getElementById('update');
+                    update.click();
+                }
+            })
+        }
+    }
 
     function createFile(){
         var path_name = prompt('File name', '');
@@ -20,7 +42,8 @@ jQuery(document).ready(function ($) {
                 dataType: "json",
                 cache: false,
                 success: function (data) {
-                    alert(data['result']);
+                    var update = document.getElementById('update');
+                    update.click();
                 }
             })
         }
@@ -40,7 +63,8 @@ jQuery(document).ready(function ($) {
                 dataType: "json",
                 cache: false,
                 success: function (data) {
-                    alert(data['result']);
+                    var update = document.getElementById('update');
+                    update.click();
                 }
             })
         }
@@ -75,6 +99,12 @@ jQuery(document).ready(function ($) {
                     elements[0].remove();
                 }
 
+                elements = document.getElementsByClassName('removePath');
+                count = elements.length;
+                for (var i=0; i < count; i++) {
+                    elements[0].remove();
+                }
+
 
                 var p = document.getElementById('emptyfolder');
                 if (p){
@@ -87,6 +117,7 @@ jQuery(document).ready(function ($) {
                 var a = document.createElement('a');
                 var full_path = data['cur_path'];
                 a.setAttribute('class', 'view');
+                a.setAttribute('id', 'update');
                 a.setAttribute('href', '#update');
                 a.setAttribute('data-v', full_path);
                 a.innerHTML = 'UPDATE';
@@ -103,6 +134,17 @@ jQuery(document).ready(function ($) {
                 }
 
                 if (data[key]['is_folder']) {
+                    a = document.createElement('a');
+                    a.setAttribute('class', 'removePath');
+                    a.setAttribute('href', '#remove_path');
+                    if (full_path.length == 0){
+                        a.setAttribute('data-v', 'root');
+                    } else {
+                        a.setAttribute('data-v', full_path);
+                    }
+                    a.innerHTML = 'removePath';
+                    div.appendChild(a);
+
                     a = document.createElement('a');
                     a.setAttribute('class', 'create_folder');
                     a.setAttribute('href', '#create_folder');
@@ -163,6 +205,8 @@ jQuery(document).ready(function ($) {
                 $('.view').click(changeView);
                 $('.create_folder').click(createPath);
                 $('.create_file').click(createFile);
+                $('.removePath').click(removePath);
+
             }
        });
     }
