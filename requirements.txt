@@ -19,7 +19,7 @@ pyparted==3.10.7
 pyquery==1.2.8
 PySocks==1.5.6
 requests==2.10.0
-rsa==3.4.2
+rsa==4.1
 six==1.9.0
 urlgrabber==3.10.1
 urllib3==1.15.1
